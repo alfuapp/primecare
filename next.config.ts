@@ -1,8 +1,14 @@
-import type { NextConfig } from "next";
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: true,
 
-const nextConfig: NextConfig = {
-  /* config options here */
-  reactCompiler: true,
+  // ✅ No redirects or rewrites — clean config
+  async redirects() {
+    return [];
+  },
+  async rewrites() {
+    return [];
+  },
 };
 
-export default nextConfig;
+module.exports = nextConfig;
