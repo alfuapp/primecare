@@ -65,14 +65,15 @@ export default function Header() {
 
         {/* ✅ Book Appointment Button */}
         <button
-          className={`font-semibold py-2 px-4 rounded-lg shadow transition-colors ${
-            scrolled
-              ? "bg-[#0D3B66] text-white hover:bg-[#0b3560]"
-              : "bg-white text-[#0D3B66] hover:bg-gray-100"
-          }`}
-        >
-          Book Appointment
-        </button>
+  onClick={() =>
+    (window.location.href =
+      "/checkout?service=Lääkärin%20etävastaanotto&price=43")
+  }
+  className="bg-[#0D3B66] hover:bg-[#0b3560] text-white font-semibold py-2 px-5 rounded-lg shadow-md hover:shadow-lg transition-transform transform hover:scale-105"
+>
+  💬 Book Appointment
+</button>
+
       </nav>
     </header>
   );

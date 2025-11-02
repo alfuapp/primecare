@@ -24,12 +24,16 @@ export default function Home() {
   </p>
 
         <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="bg-[#0D3B66] hover:bg-[#0c3560] text-white font-semibold py-3 px-6 rounded-lg shadow-md transition"
-        >
-          💊 Uusi resepti nyt
-        </motion.button>
+  whileHover={{ scale: 1.05 }}
+  whileTap={{ scale: 0.95 }}
+  onClick={() =>
+    (window.location.href =
+      "/checkout?service=Reseptin uusiminen&price=12")
+  }
+  className="bg-[#0D3B66] hover:bg-[#0c3560] text-white font-semibold py-3 px-6 rounded-lg shadow-md transition"
+>
+  💊 Uusi resepti nyt
+</motion.button>
       </motion.div>
 
       {/* Doctor Illustration */}
@@ -57,35 +61,60 @@ export default function Home() {
 
 {/* Digniinta – same style as UUSI RESEPTI NYT card */}
 {/* Digniinta – compact & balanced */}
+{/* PrimeCare – Tietoa & etu */}
+{/* PrimeCare – Tietoa & etu */}
 <motion.div
-  className="bg-white rounded-2xl shadow-md border border-gray-200 p-8 text-center flex flex-col justify-between hover:shadow-lg transition md:w-1/2"
-  whileHover={{ scale: 1.02 }}
-  initial={{ opacity: 0, y: 20 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ delay: 0.6, duration: 0.8 }}
+  className="bg-white rounded-2xl shadow-md border border-gray-200 p-8 text-center"
+  whileHover={{ scale: 1.03 }}
 >
-  {/* Cinwaanka capsule */}
-  <div className="flex items-center justify-center gap-2 bg-[#0D3B66] text-white rounded-lg py-3 px-6 mb-6 w-fit mx-auto shadow-sm">
-    <span className="text-sm sm:text-base font-bold tracking-wide uppercase">
-      ⚠️ HUOMIO
-    </span>
+  {/* Title */}
+  <h2 className="text-base font-semibold text-white bg-[#0D3B66] rounded-md inline-flex items-center gap-2 px-4 py-2 mb-4">
+    💙 Tietoa PrimeCaresta
+  </h2>
+
+  {/* Paragraphs */}
+  <div className="text-gray-700 leading-relaxed space-y-3 mb-6 text-sm sm:text-base">
+    <p>
+      PrimeCare on aina tukenasi – nopea ja luotettava
+      </p>
+      <p>palvelu reseptin
+      uusimiseen sekä etälääkärin vastaanottoon.
+      </p> 
+    <p>
+      Tunnistaudu turvallisesti ja hoida terveysasiasi</p>
+      <p> helposti muutamassa
+      minuutissa – missä ja milloin vain.</p>
+    
+    <p className="font-semibold text-[#0D3B66]">
+      Luotettava suomalainen palvelu, joka pitää huolta hyvinvoinnistasi.
+    </p>
   </div>
 
-  {/* Qoraalka fariinta – kooban oo isku miisaan ah */}
-  <p className="text-gray-700 text-sm sm:text-base leading-relaxed">
-    Emme uusi antibioottien, huumelääkkeiden, unilääkkeiden, rauhoittavien tai voimakkaiden kipulääkkeiden reseptejä.
+  {/* Discount */}
+  <div className="inline-block bg-green-50 text-green-700 border border-green-200 rounded-lg px-3 py-1 text-sm font-semibold mb-6">
+    🎁 −10% ensimmäisestä tilauksesta, kun rekisteröidyt
+  </div>
 
-  </p>
-  <p className="text-[#E63946] text-sm mt-3">
-   Näiden reseptien uusimispyyntöjä ei käsitellä eikä maksua palauteta.
-  </p>
-
-  <div className="mt-6">
-    <button className="bg-[#E63946] hover:bg-[#d5303e] text-white font-semibold py-2 px-5 rounded-lg shadow">
-      LUE LISÄÄ
+  {/* CTA */}
+  <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+    <a
+      href="/about"
+      className="bg-white text-[#0D3B66] border border-[#0D3B66] hover:bg-[#0D3B66] hover:text-white rounded-lg px-5 py-2 font-semibold transition"
+    >
+      Lue lisää
+    </a>
+    <button
+      onClick={() =>
+        (window.location.href =
+          "/checkout?service=Reseptin%20uusiminen&price=12")
+      }
+      className="bg-[#E63946] hover:bg-[#d5303e] text-white font-semibold px-5 py-2 rounded-lg shadow"
+    >
+      Uusi resepti nyt
     </button>
   </div>
 </motion.div>
+
 
 
 
@@ -95,29 +124,26 @@ export default function Home() {
 
 
     {/* ✅ Services Section – responsive layout */}
+{/* Services Section */}
 <section className="mt-20 w-full bg-[#FFFFFF] py-10">
-  <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-4 sm:px-6 lg:px-8">
+  <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 px-6">
     
     {/* Reseptin uusiminen */}
     <motion.div
-      className="bg-white rounded-2xl shadow-md border border-gray-200 p-6 sm:p-8 text-center flex flex-col justify-between hover:shadow-lg transition"
-      whileHover={{ scale: 1.02 }}
+      className="bg-white rounded-2xl shadow-md border border-gray-200 p-8 text-center"
+      whileHover={{ scale: 1.03 }}
     >
-      <div className="flex items-center justify-center gap-2 bg-[#0D3B66] text-white rounded-lg py-3 px-6 mb-6 w-fit mx-auto shadow-sm">
-        <span className="text-xl">💊</span>
-        <span className="font-bold tracking-wide">UUSI RESEPTI NYT</span>
-      </div>
-
-      <div>
-        <p className="text-4xl font-bold text-[#E63946] mb-1">12 €</p>
-        <p className="text-sm text-[#E63946] mb-4">(20 euroa ilman Kela-korvausta)</p>
-
-        <ul className="text-gray-700 space-y-2 mb-6">
-          <li>✔ Arkipäivän loppuun asti</li>
-          <li>✔ Julkisen tai yksityisen lääkärin resepti</li>
-        </ul>
-      </div>
-
+      <h2 className="text-xl font-bold text-white bg-[#0D3B66] rounded-md inline-block px-4 py-2 mb-4">
+        💊 Uusi resepti nyt
+      </h2>
+      <p className="text-4xl font-bold text-[#E63946] mb-1">12 €</p>
+      <p className="text-sm text-[#E63946] mb-4">
+        (20 euroa ilman Kela-korvausta)
+      </p>
+      <ul className="text-gray-700 space-y-2 mb-6">
+        <li>✔ Arkipäivän loppuun asti</li>
+        <li>✔ Julkisen tai yksityisen lääkärin resepti</li>
+      </ul>
       <button className="bg-[#E63946] hover:bg-[#d5303e] text-white font-semibold py-2 px-5 rounded-lg shadow">
         VALITSE
       </button>
@@ -125,59 +151,43 @@ export default function Home() {
 
     {/* Lääkärin etävastaanotto */}
     <motion.div
-      className="bg-white rounded-2xl shadow-md border border-gray-200 p-6 sm:p-8 text-center flex flex-col justify-between hover:shadow-lg transition"
-      whileHover={{ scale: 1.02 }}
+      className="bg-white rounded-2xl shadow-md border border-gray-200 p-8 text-center"
+      whileHover={{ scale: 1.03 }}
     >
-      <div className="flex items-center justify-center gap-2 bg-[#0D3B66] text-white rounded-lg py-3 px-6 mb-6 w-fit mx-auto shadow-sm">
-        <span className="text-xl">👨‍⚕️</span>
-        <span className="font-bold tracking-wide">LÄÄKÄRIN ETÄVASTAANOTTO</span>
-      </div>
-
-      <div>
-        <p className="text-4xl font-bold text-[#E63946] mb-1">43 €</p>
-        <p className="text-sm text-[#E63946] mb-4">(68 euroa ilman Kela-korvausta)</p>
-
-        <ul className="text-gray-700 space-y-2 mb-6">
-          <li>✔ Sairauslomatodistuksen pyyntö</li>
-          <li>✔ Uusi lääkemääräyspyyntö</li>
-          <li>✔ Hoidon määrittäminen</li>
-        </ul>
-      </div>
-
+      <h2 className="text-xl font-bold text-white bg-[#0D3B66] rounded-md inline-block px-4 py-2 mb-4">
+        🩺 Lääkärin etävastaanotto
+      </h2>
+      <p className="text-4xl font-bold text-[#E63946] mb-1">43 €</p>
+      <p className="text-sm text-[#E63946] mb-4">
+        (68 euroa ilman Kela-korvausta)
+      </p>
+      <ul className="text-gray-700 space-y-2 mb-6">
+        <li>✔ Sairauslomatodistus</li>
+        <li>✔ Uusi lääkemääräyspyyntö</li>
+        <li>✔ Hoidon määrittäminen</li>
+      </ul>
       <button className="bg-[#E63946] hover:bg-[#d5303e] text-white font-semibold py-2 px-5 rounded-lg shadow">
         VALITSE
       </button>
     </motion.div>
 
-    {/* Optional – 3rd card for layout symmetry */}
-    <motion.div
-      className="bg-white rounded-2xl shadow-md border border-gray-200 p-6 sm:p-8 text-center flex flex-col justify-between hover:shadow-lg transition"
-      whileHover={{ scale: 1.02 }}
-    >
-      <div className="flex items-center justify-center gap-2 bg-[#0D3B66] text-white rounded-lg py-3 px-6 mb-6 w-fit mx-auto shadow-sm">
-        <span className="text-xl">🩺</span>
-        <span className="font-bold tracking-wide">LÄÄKÄRINTODISTUS</span>
-      </div>
-
-      <div>
-        <p className="text-4xl font-bold text-[#E63946] mb-1">25 €</p>
-        <p className="text-sm text-[#E63946] mb-4">(ilman Kela-korvausta)</p>
-
-        <ul className="text-gray-700 space-y-2 mb-6">
-          <li>✔ Työkyvyttömyystodistus</li>
-          <li>✔ Sairauspoissaolotodistus</li>
-          <li>✔ Lääkärin allekirjoituksella</li>
-        </ul>
-      </div>
-
-      <button
-  onClick={() => (window.location.href = "/checkout")}
-  className="bg-[#E63946] hover:bg-[#d5303e] text-white font-semibold py-2 px-5 rounded-lg shadow"
+    {/* Huomio / Ei uusita lääkkeitä */}
+    {/* Tärkeää tietoa */}
+<motion.div
+  className="bg-white rounded-2xl shadow-md border border-gray-200 p-8 text-center"
+  whileHover={{ scale: 1.03 }}
 >
-  VALITSE
-</button>
+  <h2 className="text-xl font-bold text-white bg-[#E63946] rounded-md inline-block px-4 py-2 mb-4">
+    ℹ️ Tärkeää tietoa
+  </h2>
+  <p className="text-gray-700 leading-relaxed">
+    PrimeCare ei uusi antibioottien, huumausaineiden, unilääkkeiden,
+    rauhoittavien tai vahvojen kipulääkkeiden reseptejä. Näiden pyyntöjä ei
+    käsitellä eikä maksua palauteta.
+  </p>
+</motion.div>
 
-    </motion.div>
+
   </div>
 </section>
 
@@ -198,11 +208,16 @@ export default function Home() {
             Nopeasti, turvallisesti ja helposti — PrimeCare auttaa sinua uusimaan reseptisi missä ja milloin vain.
           </p>
           <motion.button
-            whileHover={{ scale: 1.05 }}
-            className="bg-white text-[#0D3B66] hover:bg-gray-100 font-semibold py-3 px-8 rounded-lg shadow-md transition"
-          >
-            💊 UUSI RESEPTI NYT
-          </motion.button>
+  whileHover={{ scale: 1.05 }}
+  onClick={() =>
+    (window.location.href =
+      "/checkout?service=Reseptin uusiminen&price=12")
+  }
+  className="bg-white text-[#0D3B66] hover:bg-gray-100 font-semibold py-3 px-8 rounded-lg shadow-md transition"
+>
+  💊 UUSI RESEPTI NYT
+</motion.button>
+
         </div>
       </motion.section>
     </main>

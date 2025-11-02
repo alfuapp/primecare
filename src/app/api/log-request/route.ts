@@ -4,8 +4,10 @@ import path from "path";
 
 export async function POST(request: Request) {
   try {
-    const { email, phone } = await request.json();
+    // ✅ Halkan ayaa la soo qaadanayaa dhammaan xogta
+    const { email, phone, service, price } = await request.json();
 
+    // ✅ Hubi in xogta muhiimka ahi ay jirto
     if (!email || !phone) {
       return NextResponse.json(
         { error: "Email and phone are required" },
@@ -13,26 +15,28 @@ export async function POST(request: Request) {
       );
     }
 
-    // ✅ Define file path inside project root
+    // ✅ Faylka log-ka
     const logFilePath = path.join(process.cwd(), "user_logs.json");
 
-    // ✅ Read old logs if exist
+    // ✅ Akhri xogtii hore haddii uu fayl jiro
     let logs = [];
     if (fs.existsSync(logFilePath)) {
       const fileData = fs.readFileSync(logFilePath, "utf-8");
       logs = JSON.parse(fileData);
     }
 
-    // ✅ Add new entry
+    // ✅ Diiwaangeli xogta cusub
     const newLog = {
       email,
       phone,
+      service: service || "N/A",
+      price: price || "0",
       timestamp: new Date().toISOString(),
     };
 
     logs.push(newLog);
 
-    // ✅ Save to file
+    // ✅ Ku qor xogta faylka
     fs.writeFileSync(logFilePath, JSON.stringify(logs, null, 2));
 
     console.log("✅ Log saved:", newLog);

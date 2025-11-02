@@ -1,44 +1,42 @@
 "use client";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 export default function CheckoutPage() {
+  const searchParams = useSearchParams();
+  const service = searchParams.get("service") || "Palvelu";
+  const price = searchParams.get("price") || "0";
+
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: any) => {
-  e.preventDefault();
-  setLoading(true);
+    e.preventDefault();
+    setLoading(true);
 
-  try {
-    // 1️⃣ — Save log first
-    await fetch("/api/log-request", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, phone }),
-    });
+    try {
+      // ✅ Save log first
+      await fetch("/api/log-request", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, phone, service, price }),
+      });
 
-    // 2️⃣ — Then redirect
-    const res = await fetch("/api/start-identification", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, phone }),
-    });
-
-    const data = await res.json();
-
-    if (data.redirectUrl) {
-      window.location.href = data.redirectUrl;
-    } else {
-      alert("Virhe: ei tunnistusosoitetta");
+      // ✅ Redirect to summary page (confirmation)
+      const params = new URLSearchParams({
+        service,
+        price,
+        email,
+        phone,
+      });
+      window.location.href = `/summary?${params.toString()}`;
+    } catch (err) {
+      console.error("Virhe tunnistautumisessa:", err);
+      alert("Virhe tunnistautumisessa, yritä uudelleen.");
+      setLoading(false);
     }
-  } catch (err) {
-    console.error("Virhe tunnistautumisessa:", err);
-    alert("Virhe tunnistautumisessa, yritä uudelleen.");
-    setLoading(false);
-  }
-};
-
+  };
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-[#F9FBFD] text-gray-800 px-6">
@@ -47,8 +45,11 @@ export default function CheckoutPage() {
         className="bg-white p-8 rounded-2xl shadow-md w-full max-w-md text-center space-y-4"
       >
         <h1 className="text-2xl font-bold text-[#0D3B66] mb-4">
-          Uusi resepti verkossa
+          {service}
         </h1>
+        <p className="text-lg text-[#E63946] font-semibold mb-4">
+          Hinta: {price} €
+        </p>
 
         <input
           type="email"
@@ -78,7 +79,7 @@ export default function CheckoutPage() {
           disabled={loading}
           className="w-full bg-[#0D3B66] text-white py-3 rounded-lg font-semibold hover:bg-[#0b3560] transition"
         >
-          {loading ? "Siirrytään..." : "Jatka tunnistautumiseen"}
+          {loading ? "Siirrytään..." : "Jatka"}
         </button>
       </form>
     </main>
