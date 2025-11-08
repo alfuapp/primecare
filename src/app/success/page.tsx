@@ -1,39 +1,42 @@
 "use client";
-import { useSearchParams, useRouter } from "next/navigation";
 
-export default function SuccessPage() {
+import { Suspense } from "react";
+import { useSearchParams } from "next/navigation";
+
+function SuccessContent() {
   const params = useSearchParams();
-  const router = useRouter();
-
-  const email = params.get("email");
-  const phone = params.get("phone");
-  const service = params.get("service");
-  const price = params.get("price");
+  const service = params.get("service") || "Resepti";
+  const price = params.get("price") || "12";
 
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen bg-[#F9FBFD] text-gray-800 px-6">
-      <div className="bg-white p-10 rounded-2xl shadow-md border border-gray-200 max-w-md text-center">
-        <h1 className="text-3xl font-bold text-[#0D3B66] mb-4">
-          Tunnistautuminen onnistui 🎉
+    <main className="flex flex-col items-center justify-center min-h-screen bg-[#F9FBFD] text-gray-700 px-4">
+      <div className="bg-white rounded-xl shadow-lg p-8 w-full max-w-md text-center">
+        <h1 className="text-3xl font-semibold text-green-600 mb-4">
+          ✅ Maksu onnistui!
         </h1>
+
+        <p className="text-gray-700 mb-2">
+          <strong>Palvelu:</strong> {service}
+        </p>
         <p className="text-gray-700 mb-6">
-          Kiitos! Tietosi on vahvistettu ja maksusi on suoritettu onnistuneesti.
+          <strong>Hinta:</strong> €{price}
         </p>
 
-        <div className="text-left text-gray-600 border-t pt-4 text-sm mb-6">
-          <p><strong>Palvelu:</strong> {service}</p>
-          <p><strong>Hinta:</strong> {price} €</p>
-          <p><strong>Sähköposti:</strong> {email}</p>
-          <p><strong>Puhelin:</strong> {phone}</p>
-        </div>
-
-        <button
-          onClick={() => router.push("/")}
-          className="bg-[#0D3B66] hover:bg-[#0b3560] text-white font-semibold py-2 px-6 rounded-lg shadow transition"
+        <a
+          href="/"
+          className="inline-block bg-[#0D3B66] hover:bg-[#0b3155] text-white px-6 py-3 rounded-lg font-semibold shadow transition"
         >
           Palaa etusivulle
-        </button>
+        </a>
       </div>
     </main>
+  );
+}
+
+export default function SuccessPage() {
+  return (
+    <Suspense fallback={<div className="p-10 text-center text-gray-600">Ladataan...</div>}>
+      <SuccessContent />
+    </Suspense>
   );
 }

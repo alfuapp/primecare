@@ -1,43 +1,26 @@
 "use client";
-
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 export default function SuccessContent() {
   const params = useSearchParams();
-  const router = useRouter();
-
-  const email = params.get("email") || "";
-  const phone = params.get("phone") || "";
-  const service = params.get("service") || "";
-  const price = params.get("price") || "";
+  const service = params.get("service");
+  const price = params.get("price");
 
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen bg-[#F9FBFD] text-gray-700 px-4">
-      <div className="bg-white rounded-xl shadow-lg p-8 w-full max-w-md text-center">
-        <h1 className="text-2xl font-semibold text-green-600 mb-4">
-          ✅ Payment Successful
-        </h1>
-
-        <p className="text-gray-600 mb-2">
-          <strong>Service:</strong> {service}
-        </p>
-        <p className="text-gray-600 mb-2">
-          <strong>Email:</strong> {email}
-        </p>
-        <p className="text-gray-600 mb-2">
-          <strong>Phone:</strong> {phone}
-        </p>
-        <p className="text-gray-800 font-medium mt-4">
-          Total Paid: €{(Number(price) / 100).toFixed(2)}
-        </p>
-
-        <button
-          onClick={() => router.push("/")}
-          className="mt-6 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition"
-        >
-          Back to Home
-        </button>
-      </div>
-    </main>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-white text-center px-4 py-10">
+      <h1 className="text-3xl font-bold text-[#0D3B66] mb-4">✅ Maksu onnistui!</h1>
+      <p className="text-gray-700 text-lg mb-2">
+        Palvelu: <strong>{service}</strong>
+      </p>
+      <p className="text-gray-700 text-lg mb-6">
+        Hinta: <strong>{price} €</strong>
+      </p>
+      <a
+        href="/"
+        className="bg-[#0D3B66] hover:bg-[#0b3155] text-white px-6 py-3 rounded-lg font-semibold shadow"
+      >
+        Palaa etusivulle
+      </a>
+    </div>
   );
 }
