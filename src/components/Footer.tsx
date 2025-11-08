@@ -17,7 +17,7 @@ export default function Footer() {
         <div>
           <h3 className="text-xl font-bold text-[#0D3B66] mb-2">Yhteystiedot</h3>
           <p className="text-sm text-gray-600">
-            WhatsApp: <a href="tel:+358401234567" className="hover:text-[#0077b6]">+358 46 583 9172</a>
+            WhatsApp: <a href="tel:+358401234567" className="hover:text-[#0077b6]">+358 40 123 4567</a>
           </p>
           <p className="text-sm text-gray-600">
             Sähköposti:{" "}
@@ -25,9 +25,7 @@ export default function Footer() {
               info@primecare.fi
             </a>
           </p>
-          <p className="text-sm text-gray-600">Ojahaanrinne 4</p>
-            <p className="text-sm text-gray-600">01600</p>
-              <p className="text-sm text-gray-600">Vantaa, Suomi</p>
+          <p className="text-sm text-gray-600">Helsinki, Suomi</p>
         </div>
 
         {/* Links */}

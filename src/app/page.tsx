@@ -136,9 +136,9 @@ export default function Home() {
       <h2 className="text-xl font-bold text-white bg-[#0D3B66] rounded-md inline-block px-4 py-2 mb-4">
         💊 Uusi resepti nyt
       </h2>
-      <p className="text-4xl font-bold text-[#E63946] mb-1">10 €</p>
+      <p className="text-4xl font-bold text-[#E63946] mb-1">12 €</p>
       <p className="text-sm text-[#E63946] mb-4">
-
+        (20 euroa ilman Kela-korvausta)
       </p>
       <ul className="text-gray-700 space-y-2 mb-6">
         <li>✔ Arkipäivän loppuun asti</li>
