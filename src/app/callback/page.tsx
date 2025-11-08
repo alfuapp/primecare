@@ -1,5 +1,4 @@
 "use client";
-// build trigger by Xasan 2025-11-08
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -12,14 +11,12 @@ export default function CheckoutPage() {
   const [phone, setPhone] = useState<string>("");
 
   const handlePay = () => {
-    const query = new URLSearchParams({
-      status: "success",
-      email,
-      phone,
-      service,
-      price: price ? String(price) : "",
-    }).toString();
-    router.push(`/callback?${query}`);
+    // simply go to success page directly for testing (no useSearchParams here)
+    router.push(
+      `/success?email=${encodeURIComponent(email)}&phone=${encodeURIComponent(
+        phone
+      )}&service=${encodeURIComponent(service)}&price=${price}`
+    );
   };
 
   return (
@@ -30,50 +27,41 @@ export default function CheckoutPage() {
         </h1>
 
         <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-600">
-              Service
-            </label>
-            <input
-              type="text"
-              value={service}
-              onChange={(e) => setService(e.target.value)}
-              className="mt-1 w-full border border-gray-300 rounded-md p-2"
-            />
-          </div>
+          <label className="block text-sm font-medium text-gray-600">
+            Service
+          </label>
+          <input
+            type="text"
+            value={service}
+            onChange={(e) => setService(e.target.value)}
+            className="mt-1 w-full border border-gray-300 rounded-md p-2"
+          />
 
-          <div>
-            <label className="block text-sm font-medium text-gray-600">
-              Email
-            </label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
-              className="mt-1 w-full border border-gray-300 rounded-md p-2"
-              required
-            />
-          </div>
+          <label className="block text-sm font-medium text-gray-600">
+            Email
+          </label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="you@example.com"
+            className="mt-1 w-full border border-gray-300 rounded-md p-2"
+          />
 
-          <div>
-            <label className="block text-sm font-medium text-gray-600">
-              Phone
-            </label>
-            <input
-              type="tel"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              placeholder="+358 40 123 4567"
-              className="mt-1 w-full border border-gray-300 rounded-md p-2"
-            />
-          </div>
+          <label className="block text-sm font-medium text-gray-600">
+            Phone
+          </label>
+          <input
+            type="tel"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            placeholder="+358 40 123 4567"
+            className="mt-1 w-full border border-gray-300 rounded-md p-2"
+          />
 
-          <div className="text-center mt-6">
-            <p className="text-lg">
-              <strong>Total:</strong> €{(price / 100).toFixed(2)}
-            </p>
-          </div>
+          <p className="text-lg text-center mt-4">
+            <strong>Total:</strong> €{(price / 100).toFixed(2)}
+          </p>
 
           <button
             onClick={handlePay}
@@ -86,4 +74,3 @@ export default function CheckoutPage() {
     </main>
   );
 }
-// force redeploy callback page by Xasan
