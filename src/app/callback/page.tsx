@@ -1,8 +1,9 @@
 "use client";
-import { useEffect } from "react";
+
+import { Suspense, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export default function CallbackPage() {
+function CallbackInner() {
   const router = useRouter();
   const params = useSearchParams();
 
@@ -34,5 +35,13 @@ export default function CallbackPage() {
     <main className="flex items-center justify-center min-h-screen bg-[#F9FBFD] text-gray-700">
       <p>Tunnistautumista käsitellään...</p>
     </main>
+  );
+}
+
+export default function CallbackPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <CallbackInner />
+    </Suspense>
   );
 }
