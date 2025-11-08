@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-// Disable SSR to prevent Next.js prerender errors
 export const dynamic = "force-dynamic";
 
 export default function CheckoutPage() {
