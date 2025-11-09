@@ -1,9 +1,8 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  // apiVersion: "2024-06-20", // optional, use default
-});
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+
 
 // 💶 Cents map (1€ = 100)
 const PRICE_MAP_EUR: Record<string, number> = {
