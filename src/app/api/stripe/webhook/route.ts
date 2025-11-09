@@ -5,6 +5,8 @@ export async function POST(req: Request) {
   try {
     const body = await req.text();
     const sig = req.headers.get("stripe-signature")!;
+
+    // ✅ Stripe instance without apiVersion
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
     const event = stripe.webhooks.constructEvent(
@@ -14,6 +16,7 @@ export async function POST(req: Request) {
     );
 
     console.log("✅ Webhook event received:", event.type);
+
     return NextResponse.json({ received: true });
   } catch (err: any) {
     console.error("❌ Webhook error:", err.message);
