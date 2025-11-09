@@ -14,7 +14,8 @@ if (!sig) return NextResponse.json({ error: "Missing signature" }, { status: 400
 
 
 try {
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: "2024-06-20" });
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+
 const event = stripe.webhooks.constructEvent(body, sig, process.env.STRIPE_WEBHOOK_SECRET!);
 
 
