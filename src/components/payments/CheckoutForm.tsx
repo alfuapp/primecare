@@ -1,13 +1,13 @@
 "use client";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useStripe, useElements, CardElement } from "@stripe/react-stripe-js";
+import { useRouter } from "next/navigation";
 
 const CARD_ELEMENT_OPTIONS = {
   style: {
     base: {
       fontSize: "16px",
       color: "#1a1a1a",
-      fontSmoothing: "antialiased",
       "::placeholder": { color: "#888" },
     },
     invalid: { color: "#e53e3e" },
@@ -22,24 +22,25 @@ export default function CheckoutForm({
 }) {
   const stripe = useStripe();
   const elements = useElements();
+  const router = useRouter();
 
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<
-    "idle" | "loading" | "succeeded" | "error"
-  >("idle");
+  const [status, setStatus] = useState<"idle" | "loading" | "succeeded" | "error">("idle");
   const [message, setMessage] = useState<string | null>(null);
+  const [amount, setAmount] = useState<number>(0);
+  const [label, setLabel] = useState("Maksa");
 
-  const buttonLabel = useMemo(() => {
-    switch (priceId) {
-      case "consultation_basic":
-        return "Maksa 39,00 €";
-      case "prescription_renewal":
-        return "Maksa 9,90 €";
-      case "follow_up":
-        return "Maksa 25,00 €";
-      default:
-        return "Maksa";
+  // 🔹 Load price from backend
+  useEffect(() => {
+    async function fetchPrice() {
+      const res = await fetch(`/api/payments/price?priceId=${priceId}`);
+      const data = await res.json();
+      if (res.ok) {
+        setAmount(data.amount);
+        setLabel(`Maksa ${data.display} €`);
+      }
     }
+    fetchPrice();
   }, [priceId]);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -62,15 +63,9 @@ export default function CheckoutForm({
       const cardElement = elements.getElement(CardElement);
       if (!cardElement) throw new Error("Card element not found");
 
-      const { error, paymentIntent } = await stripe.confirmCardPayment(
-        clientSecret,
-        {
-          payment_method: {
-            card: cardElement,
-            billing_details: { email },
-          },
-        }
-      );
+      const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: { card: cardElement, billing_details: { email } },
+      });
 
       if (error) {
         setStatus("error");
@@ -81,6 +76,10 @@ export default function CheckoutForm({
       if (paymentIntent && paymentIntent.status === "succeeded") {
         setStatus("succeeded");
         setMessage("✅ Maksu onnistui! Kuitti lähetetään sähköpostiisi.");
+
+        setTimeout(() => {
+          router.push(`/payment-success?amount=${(amount / 100).toFixed(2)}&email=${encodeURIComponent(email)}`);
+        }, 2000);
       } else {
         setStatus("error");
         setMessage("Maksu ei onnistunut. Yritä uudelleen.");
@@ -100,9 +99,7 @@ export default function CheckoutForm({
         💳 PrimeCare – Korttimaksu
       </h2>
 
-      <label className="block text-sm text-gray-700">
-        Sähköposti kuittia varten
-      </label>
+      <label className="block text-sm text-gray-700">Sähköposti kuittia varten</label>
       <input
         type="email"
         required
@@ -117,11 +114,7 @@ export default function CheckoutForm({
       </div>
 
       {message && (
-        <p
-          className={`text-center text-sm ${
-            status === "error" ? "text-red-600" : "text-green-600"
-          }`}
-        >
+        <p className={`text-center text-sm ${status === "error" ? "text-red-600" : "text-green-600"}`}>
           {message}
         </p>
       )}
@@ -131,7 +124,7 @@ export default function CheckoutForm({
         disabled={status === "loading"}
         className="w-full rounded-xl bg-blue-600 hover:bg-blue-700 transition text-white font-semibold px-4 py-3 disabled:opacity-50"
       >
-        {status === "loading" ? "Käsitellään…" : buttonLabel}
+        {status === "loading" ? "Käsitellään…" : label}
       </button>
 
       <p className="text-xs text-center text-gray-500">
