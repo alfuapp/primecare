@@ -1,34 +1,41 @@
 "use client";
+
+import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
-export default function PaymentSuccessPage() {
+// ✅ Tani waxay u sheegaysaa Next.js in page-ku yahay dynamic client page
+export const dynamic = "force-dynamic";
+
+function SuccessContent() {
   const params = useSearchParams();
-  const amount = params.get("amount");
-  const email = params.get("email");
+  const service = params.get("service") || "Resepti";
+  const price = params.get("price") || "12";
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-6">
-      <div className="rounded-2xl bg-white p-8 shadow-lg text-center max-w-md">
-        <h1 className="text-2xl font-bold text-green-600 mb-4">
-          ✅ Maksu onnistui!
-        </h1>
-        <p className="text-gray-700 mb-2">
-          Kiitos maksustasi PrimeCare-palvelussa.
-        </p>
-        <p className="text-gray-700">
-          Summasi oli <span className="font-semibold">{amount} €</span>
-        </p>
-        <p className="text-sm text-gray-500 mt-2">
-          Kuitti lähetetään sähköpostiisi:{" "}
-          <span className="font-medium">{email}</span>
-        </p>
-        <a
-          href="/"
-          className="inline-block mt-6 rounded-xl bg-blue-600 hover:bg-blue-700 text-white px-6 py-2"
-        >
-          Palaa etusivulle
-        </a>
-      </div>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-white text-center px-4 py-10">
+      <h1 className="text-3xl font-bold text-[#0D3B66] mb-4">
+        ✅ Maksu onnistui!
+      </h1>
+      <p className="text-gray-700 text-lg mb-2">
+        Palvelu: <strong>{service}</strong>
+      </p>
+      <p className="text-gray-700 text-lg mb-6">
+        Hinta: <strong>{price} €</strong>
+      </p>
+      <a
+        href="/"
+        className="bg-[#0D3B66] hover:bg-[#0b3155] text-white px-6 py-3 rounded-lg font-semibold shadow"
+      >
+        Palaa etusivulle
+      </a>
     </div>
+  );
+}
+
+export default function SuccessPage() {
+  return (
+    <Suspense fallback={<div className="p-10 text-center text-gray-600">Ladataan...</div>}>
+      <SuccessContent />
+    </Suspense>
   );
 }
