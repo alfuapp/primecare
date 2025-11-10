@@ -6,8 +6,10 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 export async function POST(req: Request) {
   const body = await req.text();
-  // ❗ Halkan aan saxno
-  const sig = (headers() as any).get("stripe-signature") as string;
+
+  // ✅ Halkan waa isbeddelka saxda ah
+  const hdrs = await Promise.resolve(headers());
+  const sig = hdrs.get("stripe-signature") as string;
 
   try {
     const event = stripe.webhooks.constructEvent(
