@@ -1,34 +1,33 @@
-import Stripe from "stripe";
-import { headers } from "next/headers";
 import { NextResponse } from "next/server";
+import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
-  apiVersion: "2025-10-29.clover",
+export const config = {
+  api: {
+    bodyParser: false, // disable Next.js JSON parsing
+  },
+};
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: "2025-10-29.clover", // same version as your Stripe account
 });
 
 export async function POST(req: Request) {
-  const body = await req.text();
-
-  // ✅ Qaab iswaafaqsan Next.js 16 + Turbopack
-  const hdrs: any = await headers();
-  const sig = hdrs.get
-    ? hdrs.get("stripe-signature")
-    : (await hdrs).get("stripe-signature");
+  const rawBody = await req.text(); // must remain raw
+  const sig = req.headers.get("stripe-signature") as string;
 
   try {
     const event = stripe.webhooks.constructEvent(
-      body,
+      rawBody,
       sig,
-      process.env.STRIPE_WEBHOOK_SECRET as string
+      process.env.STRIPE_WEBHOOK_SECRET!
     );
 
     console.log("✅ Webhook received:", event.type);
 
+    // Example: handle success event
     if (event.type === "payment_intent.succeeded") {
-      const paymentIntent = event.data.object as Stripe.PaymentIntent;
-      console.log("💰 Payment succeeded:", paymentIntent.id);
-    } else {
-      console.log(`ℹ️ Unhandled event type: ${event.type}`);
+      const paymentIntent = event.data.object;
+      console.log("💰 Payment success:", paymentIntent.id);
     }
 
     return NextResponse.json({ received: true }, { status: 200 });
@@ -39,5 +38,5 @@ export async function POST(req: Request) {
 }
 
 export async function GET() {
-  return NextResponse.json({ message: "Method Not Allowed" }, { status: 405 });
+  return new NextResponse("Method Not Allowed", { status: 405 });
 }
