@@ -1,54 +1,57 @@
-import { NextResponse } from "next/server";
-import Stripe from "stripe";
+require 'sinatra'
+require 'json'
+require 'stripe'
+# This is your test secret API key.
+Stripe.api_key = 'sk_test_51SRlLrCFNCy3gWAn6hRtLmCwOYkhK8XfIfLcvaF09sUBWm1TakU0YDkb4yYmyRuSX2cIccadD2KidnBLHSrHvJ3700bTOIvePy'
+# Replace this endpoint secret with your endpoint's unique secret
+# If you are testing with the CLI, find the secret by running 'stripe listen'
+# If you are using an endpoint defined with the API or dashboard, look in your webhook settings
+# at https://dashboard.stripe.com/webhooks
+endpoint_secret = 'whsec_...';
 
-// Stripe must run on Node runtime (not Edge)
-export const runtime = "nodejs";
+set :port, 4242
 
-// Disable automatic body parsing
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+post '/webhook' do
+  payload = request.body.read
+  event = nil
 
-// Initialize Stripe with your secret key
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2025-10-29.clover",
-});
+  begin
+    event = Stripe::Event.construct_from(
+      JSON.parse(payload, symbolize_names: true)
+    )
+  rescue JSON::ParserError => e
+    # Invalid payload
+    puts "⚠️  Webhook error while parsing basic request. #{e.message}"
+    status 400
+    return
+  end
+  # Check if webhook signing is configured.
+  if endpoint_secret
+    # Retrieve the event by verifying the signature using the raw body and secret.
+    signature = request.env['HTTP_STRIPE_SIGNATURE'];
+    begin
+      event = Stripe::Webhook.construct_event(
+        payload, signature, endpoint_secret
+      )
+    rescue Stripe::SignatureVerificationError => e
+      puts "⚠️  Webhook signature verification failed. #{e.message}"
+      status 400
+    end
+  end
 
-export async function POST(req: Request) {
-  let body: string;
-  let sig: string | null;
-
-  try {
-    // Get the raw body
-    body = await req.text();
-    // Get the Stripe signature header
-    sig = req.headers.get("stripe-signature");
-    if (!sig) throw new Error("Missing Stripe signature header");
-
-    // Verify the event
-    const event = stripe.webhooks.constructEvent(
-      body,
-      sig,
-      process.env.STRIPE_WEBHOOK_SECRET!
-    );
-
-    console.log("✅ Webhook event received:", event.type);
-
-    // Handle success events
-    if (event.type === "payment_intent.succeeded") {
-      const paymentIntent = event.data.object as Stripe.PaymentIntent;
-      console.log("💰 Payment succeeded for:", paymentIntent.id);
-    }
-
-    return NextResponse.json({ received: true }, { status: 200 });
-  } catch (err: any) {
-    console.error("❌ Webhook error:", err.message);
-    return new NextResponse(`Webhook Error: ${err.message}`, { status: 400 });
-  }
-}
-
-export async function GET() {
-  return new NextResponse("Method Not Allowed", { status: 405 });
-}
+  # Handle the event
+  case event.type
+  when 'payment_intent.succeeded'
+    payment_intent = event.data.object # contains a Stripe::PaymentIntent
+    puts "Payment for #{payment_intent['amount']} succeeded."
+    # Then define and call a method to handle the successful payment intent.
+    # handle_payment_intent_succeeded(payment_intent)
+  when 'payment_method.attached'
+    payment_method = event.data.object # contains a Stripe::PaymentMethod
+    # Then define and call a method to handle the successful attachment of a PaymentMethod.
+    # handle_payment_method_attached(payment_method)
+  else
+    puts "Unhandled event type: #{event.type}"
+  end
+  status 200
+end
