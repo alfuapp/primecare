@@ -1,10 +1,12 @@
 "use client";
+
+import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
-export default function SuccessContent() {
+function SuccessContent() {
   const params = useSearchParams();
-  const service = params.get("service");
-  const price = params.get("price");
+  const service = params.get("service") || "Resepti";
+  const price = params.get("price") || "12";
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-white text-center px-4 py-10">
@@ -22,5 +24,13 @@ export default function SuccessContent() {
         Palaa etusivulle
       </a>
     </div>
+  );
+}
+
+export default function SuccessPage() {
+  return (
+    <Suspense fallback={<div className="p-10 text-center text-gray-600">Ladataan...</div>}>
+      <SuccessContent />
+    </Suspense>
   );
 }
