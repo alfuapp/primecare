@@ -1,10 +1,8 @@
-import { NextResponse } from "next/server";
+import { buffer } from "micro";
 import Stripe from "stripe";
+import type { NextApiRequest, NextApiResponse } from "next";
 
-// ✅ Stripe webhooks MUST use Node.js runtime
-export const runtime = "nodejs";
-
-// ✅ Disable Next.js body parsing
+// ✅ Disable automatic JSON parsing
 export const config = {
   api: {
     bodyParser: false,
@@ -15,33 +13,33 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2025-10-29.clover",
 });
 
-export async function POST(req: Request) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method !== "POST") {
+    res.setHeader("Allow", "POST");
+    return res.status(405).send("Method Not Allowed");
+  }
+
   try {
-    const sig = req.headers.get("stripe-signature");
+    const sig = req.headers["stripe-signature"] as string;
     if (!sig) throw new Error("Missing stripe-signature header");
 
-    const rawBody = await req.text(); // must be raw body
-
+    const buf = await buffer(req); // 👈 This keeps raw body intact
     const event = stripe.webhooks.constructEvent(
-      rawBody,
+      buf.toString(),
       sig,
       process.env.STRIPE_WEBHOOK_SECRET!
     );
 
-    console.log("✅ Stripe event received:", event.type);
+    console.log("✅ Verified event:", event.type);
 
     if (event.type === "payment_intent.succeeded") {
       const paymentIntent = event.data.object as Stripe.PaymentIntent;
       console.log("💰 Payment succeeded:", paymentIntent.id);
     }
 
-    return NextResponse.json({ received: true }, { status: 200 });
+    return res.status(200).json({ received: true });
   } catch (err: any) {
     console.error("❌ Webhook verification failed:", err.message);
-    return new NextResponse(`Webhook Error: ${err.message}`, { status: 400 });
+    return res.status(400).send(`Webhook Error: ${err.message}`);
   }
-}
-
-export async function GET() {
-  return new NextResponse("Method Not Allowed", { status: 405 });
 }
